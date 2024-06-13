@@ -23,7 +23,10 @@
     ansible_ssh_pass: "Saibaba@007"
     ansible_connection: ansible.netcommon.network_cli
     ansible_network_os: cisco.ios.ios
-    ansible_ssh_common_args: '-o KexAlgorithms=diffie-hellman-group14-sha1'
+    ansible_ssh_extra_args: >
+      -o KexAlgorithms=+diffie-hellman-group14-sha1
+      -o HostKeyAlgorithms=+ssh-rsa
+      -o Ciphers=aes128-cbc,3des-cbc,aes192-cbc,aes256-cbc
   tasks:
     - name: Ensure the target hosts are reachable
       wait_for_connection:
