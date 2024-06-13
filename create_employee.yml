@@ -1,6 +1,6 @@
 ---
 - name: Ensure required MySQL Python module is installed and create employee in MySQL
-  hosts: localhost
+  hosts: wsl_localhost
   vars:
     mysql_hostname: localhost
     mysql_port: 3306
@@ -13,13 +13,6 @@
       lastname: rathnam
       email: sreramrathnam@gmail.com
   tasks:
-    - name: Install PyMySQL for Python 3
-      pip:
-        name: PyMySQL
-        state: present
-      become: yes
-      vars:
-        ansible_python_interpreter: /usr/bin/python3
 
     - name: Create employee in MySQL
       mysql_query:
