@@ -25,8 +25,8 @@
     ansible_network_os: cisco.ios.ios
   tasks:
     - name: Ensure the target hosts are reachable
-      ping:
-        dest: "{{ inventory_hostname }}"
+      wait_for_connection:
+        timeout: 10
 
     - name: Get facts from Cisco IOS devices
       cisco.ios.ios_facts:
