@@ -1,6 +1,6 @@
 ---
 - name: Ensure required MySQL Python module is installed and create employee in MySQL
-  hosts: localhost
+  hosts: wsl_localhost
   vars:
     mysql_hostname: localhost
     mysql_port: 3306
