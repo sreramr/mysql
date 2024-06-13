@@ -13,6 +13,13 @@
       lastname: rathnam
       email: sreramrathnam@gmail.com
   tasks:
+    - name: Install PyMySQL for Python 3
+      pip:
+        name: PyMySQL
+        state: present
+      become: yes
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
 
     - name: Create employee in MySQL
       mysql_query:
