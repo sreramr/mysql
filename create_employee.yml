@@ -1,33 +1,28 @@
 ---
-- name: Ensure required MySQL Python module is installed and create employee in MySQL
+- name: Add Linux host as node to Solarwinds
   hosts: localhost
+  gather_facts: true # if you don't want to use ansible facts, make sure to then override default caption and IP variables
   vars:
-    mysql_hostname: 122.165.77.138
-    mysql_port: 3306
-    mysql_root_user: root
-    mysql_root_password: rootpassword
-    mysql_db_name: ai_users
-    mysql_table_name: employee
-    employee_data:
-      firstname: sreram
-      lastname: rathnam
-      email: sreramrathnam@gmail.com
-  tasks:
-    - name: Install PyMySQL for Python 3
-      pip:
-        name: PyMySQL
-        state: present
-      become: yes
-      vars:
-        ansible_python_interpreter: /usr/bin/python3
+    ansible_python_interpreter: /usr/bin/python3
+    solarwinds_server: 192.168.39.128
+    solarwinds_username: admin
+    solarwinds_password: 
+    orion_node_ip_address: 192.168.10.3
+    orion_node_caption_name: Cisco 
+    orion_node_polling_method: SNMP
+    orion_node_sys_name: R1.filingin.net
+    orion_node_machine_name: Cisco 7206 VXR
+    orion_node_vendor_name: Cisco
+    orion_node_snmp_version: 2
+    orion_node_ro_community_string: public
+    orion_node_discover_interfaces: true
+    orion_node_snmp_pollers:
+      - name: N.LoadAverage.SNMP.Linux
+        enabled: true
+      - name: N.Cpu.SNMP.HrProcessorLoad
+        enabled: true
+      - name: N.Memory.SNMP.NetSnmpReal
+        enabled: true
 
-    - name: Create employee in MySQL
-      mysql_query:
-        login_host: "{{ mysql_hostname }}"
-        login_port: "{{ mysql_port }}"
-        login_user: "{{ mysql_root_user }}"
-        login_password: "{{ mysql_root_password }}"
-        login_db: "{{ mysql_db_name }}"
-        query: >
-          INSERT INTO {{ mysql_table_name }} (firstname, lastname, email)
-          VALUES ('{{ employee_data.firstname }}', '{{ employee_data.lastname }}', '{{ employee_data.email }}')
+  roles:
+     - { role: solarwinds.orion.orion_node }
