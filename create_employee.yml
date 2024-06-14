@@ -17,13 +17,13 @@
 
 - name: Perform tasks on routers
   hosts: routers
-  gather_facts: no
+  gather_facts: yes
   vars:
     ansible_user: "sreram"
     ansible_ssh_pass: "Saibaba@007"
     ansible_connection: ansible.netcommon.network_cli
     ansible_network_os: cisco.ios.ios
-    ansible_ssh_common_args: '-F /config'
+    #ansible_ssh_common_args: '-F /config'
   tasks:
     - name: Ensure the target hosts are reachable
       wait_for_connection:
