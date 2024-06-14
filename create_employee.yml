@@ -1,6 +1,6 @@
 ---
 - name: Add Linux host as node to Solarwinds
-  hosts: localhost
+  hosts: wsl
   gather_facts: true # if you don't want to use ansible facts, make sure to then override default caption and IP variables
   vars:
     ansible_python_interpreter: /usr/bin/python3
