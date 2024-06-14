@@ -2,7 +2,7 @@
 - name: Ensure required MySQL Python module is installed and create employee in MySQL
   hosts: localhost
   vars:
-    mysql_hostname: localhost
+    mysql_hostname: 122.165.77.138
     mysql_port: 3306
     mysql_root_user: root
     mysql_root_password: rootpassword
