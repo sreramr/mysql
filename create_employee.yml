@@ -1,47 +1,33 @@
 ---
-- name: Ping Test Playbook
+- name: Ensure required MySQL Python module is installed and create employee in MySQL
   hosts: localhost
-  gather_facts: yes
-  tasks:
-    - name: Define a list of new hosts with their groups and credentials
-      set_fact:
-        new_hosts:
-          - hostname: 192.168.10.3
-            group: routers
-
-    - name: Add new hosts to inventory
-      add_host:
-        name: "{{ item.hostname }}"
-        groups: "{{ item.group }}"
-      loop: "{{ new_hosts }}"
-
-- name: Perform tasks on routers
-  hosts: routers
-  gather_facts: yes
   vars:
-    ansible_user: "sreram"
-    ansible_ssh_pass: "Saibaba@007"
-    ansible_connection: ansible.netcommon.network_cli
-    ansible_network_os: cisco.ios.ios
-    #ansible_ssh_common_args: '-F /config'
+    mysql_hostname: localhost
+    mysql_port: 3306
+    mysql_root_user: root
+    mysql_root_password: rootpassword
+    mysql_db_name: ai_users
+    mysql_table_name: employee
+    employee_data:
+      firstname: sreram
+      lastname: rathnam
+      email: sreramrathnam@gmail.com
   tasks:
-    - name: Ensure the target hosts are reachable
-      wait_for_connection:
-        timeout: 10
+    - name: Install PyMySQL for Python 3
+      pip:
+        name: PyMySQL
+        state: present
+      become: yes
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
 
-    - name: Get facts from Cisco IOS devices
-      cisco.ios.ios_facts:
-      register: cisco_facts
-
-    - name: Display gathered facts
-      ansible.builtin.debug:
-        var: cisco_facts
-
-    - name: Run show version on remote devices
-      cisco.ios.ios_command:
-        commands: show version
-      register: version_output
-
-    - name: Display show version output
-      ansible.builtin.debug:
-        var: version_output
+    - name: Create employee in MySQL
+      mysql_query:
+        login_host: "{{ mysql_hostname }}"
+        login_port: "{{ mysql_port }}"
+        login_user: "{{ mysql_root_user }}"
+        login_password: "{{ mysql_root_password }}"
+        login_db: "{{ mysql_db_name }}"
+        query: >
+          INSERT INTO {{ mysql_table_name }} (firstname, lastname, email)
+          VALUES ('{{ employee_data.firstname }}', '{{ employee_data.lastname }}', '{{ employee_data.email }}')
